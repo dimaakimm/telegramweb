@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='styles.css' type='text/css'>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="form" method='post' action='signup.php?r=$randstr'>
+    <div data-role='fieldcontain'>
+        <label></label>
+        Please enter your details
+    </div>
+    <div data-role='fieldcontain'>
+        <label>Forename</label>
+        <input id="forename" type="text" name="forename" maxlength="32" placeholder="your forename">
+    </div>
+    <div data-role='fieldcontain'>
+        <label>Surname</label>
+        <input id="surname" type="text" name="surname" maxlength="32" placeholder="your surname">
+    </div>
+    <div data-role='fieldcontain'>
+        <label>Email</label>
+        <input id="email" type="text" name="email" maxlength="64" placeholder="your email">
+    </div>
+    <div data-role='fieldcontain'>
+        <label>Phone number</label>
+        <input id="phonenumber" type="text" name="phonenumber" maxlength="12" placeholder="your phone number">
+    </div>
+    <div data-role='fieldcontain'>
+        <label></label>
+        <input data-transition='slide' type='submit' value='Send!' id="send" class="send" onclick="myFunction()">
+    </div>
+    </div>
+</div>
+<iframe loading="lazy" src="https://yandex.ru/map-widget/v1/?um=constructor%3A64ed3a5957b9e1cbfebcb76194568c822d39a3e07713786fbdda720316d9d4b5&amp;source=constructor" width="100%" height="100%"  frameborder="0"></iframe>
+</body>
+<script>
+    let tg = window.Telegram.WebApp;
+    let send = document.getElementById('send')
+    tg.expand()
+    function validateForename(field){
+        return (field=="") ? "No forename\n" : ""
+    }
+    function validateSurname(field){
+        return (field=="") ? "No surname\n" : ""
+    }
+    function validatePhoneNumber(field){
+        if (field=="")
+            return "No phone number\n"
+        else if (!(/^\d+$/.test(field)))
+            return "Incorrect format of phone number\n"
+        else return ""
+    }
+    function validateEmail(field){
+        if (field=="")
+            return "No age\n"
+        else if (!field.indexOf(".")>0 ||
+            !field.indexOf("@")>0 ||
+            /[^a-zA-Z0-9.@]/.test(field))
+            return "Incorrect format of email\n"
+        else return ""
+    }
+    function myFunction(){
+        let forename = document.getElementById('forename').value;
+        let surname = document.getElementById('surname').value;
+        let email = document.getElementById('email').value;
+        let phonenumber = document.getElementById('phonenumber').value;
+        fail = validateForename(forename);
+        fail += validateSurname(surname);
+        fail += validateEmail(email);
+        fail +=validatePhoneNumber(phonenumber)
+        if (fail==""){
+            let data = {
+                forename: forename,
+                surname: surname,
+                email: email,
+                phonenumber: phonenumber
+            }
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        }
+        else { alert(fail)}
+    }
+</script>
+</html>
